@@ -5,7 +5,6 @@
  */
 package GUI;
 
-import java.util.Arrays;
 import java.util.stream.IntStream;
 import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
@@ -17,8 +16,13 @@ import org.jnativehook.mouse.NativeMouseEvent;
  */
 public class KeyBindingView extends BaseView {
     private static boolean isRebindingFirstKey = false;
-    private static int criticalKeyEvents[] = {};
-    private static int criticalMouseEvents[] = {1,2};
+    private static boolean isRebindingSecondKey = false;
+
+    private String tmpBindedActionKeys[] = bindedActionKeys.clone();
+    
+    //Arrays containing keycodes to be ignored if pressed
+    private static final int criticalKeyEvents[] = {};
+    private static final int criticalMouseEvents[] = {1,2};
 
     /**
      * Creates new form KeyBindingView
@@ -27,6 +31,9 @@ public class KeyBindingView extends BaseView {
         super();
         addWindowListener(this);
         initComponents();
+        if(tmpBindedActionKeys[0] != null) jLabel3.setText(tmpBindedActionKeys[0]);
+        if(tmpBindedActionKeys[1] != null) jLabel4.setText(tmpBindedActionKeys[1]);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setVisible(true);
     }
 
@@ -43,9 +50,9 @@ public class KeyBindingView extends BaseView {
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -60,36 +67,44 @@ public class KeyBindingView extends BaseView {
 
         jLabel2.setText("Deploy Key");
 
-        jLabel3.setText("jLabel3");
-
-        jLabel4.setText("jLabel3");
+        jLabel3.setText("...");
 
         jButton2.setText("Rebind");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Ok");
+        jButton3.setText("OK");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("jLabel4");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                                .addComponent(jButton2))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton1)))))
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -103,8 +118,8 @@ public class KeyBindingView extends BaseView {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel4)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton3)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -117,6 +132,18 @@ public class KeyBindingView extends BaseView {
         jLabel3.setText("Enter Key...");
         isRebindingFirstKey = true;
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        jLabel4.setText("Enter Key...");
+        isRebindingSecondKey = true;
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        bindedActionKeys = tmpBindedActionKeys;
+        setVisible(false);
+        System.runFinalization();
+        isRebinding = false;
+    }//GEN-LAST:event_jButton3ActionPerformed
     
     @Override
     public void nativeKeyPressed(NativeKeyEvent nke) {
@@ -129,18 +156,38 @@ public class KeyBindingView extends BaseView {
     }
     
     private void undertakeEventAction(NativeInputEvent nie){
-        if(isRebindingFirstKey && !isCriticalKey(nie)){
-            String keyStringValue = "";
+        if((isRebindingFirstKey || isRebindingSecondKey) && !isCriticalKey(nie)){
+            String prettyKeyStringValue = "";
+            String keyValue = "";
             if(nie instanceof NativeKeyEvent){
                 NativeKeyEvent nke = (NativeKeyEvent) nie;
-                keyStringValue = "KeyCode: " + String.valueOf(nke.getKeyCode());
+                keyValue = String.valueOf(nke.getKeyCode());
+                prettyKeyStringValue = "KeyCode: " + keyValue;
             }else if(nie instanceof NativeMouseEvent){
                 NativeMouseEvent nme = (NativeMouseEvent) nie;
-                keyStringValue = "MouseKey: " + String.valueOf(nme.getButton());
+                keyValue = String.valueOf(nme.getButton());
+                prettyKeyStringValue = "MouseKey: " + keyValue;
+            }else{
+                keyValue = String.valueOf(nie.getID());
+                prettyKeyStringValue = "Unrecognized input ("+keyValue+")";
             }
-            bindedActionKeys[0] = keyStringValue;
-            jLabel3.setText(keyStringValue);
-            isRebindingFirstKey = false;
+            if(isRebindingFirstKey){
+                if(tmpBindedActionKeys[1] != null && tmpBindedActionKeys[1].equalsIgnoreCase(prettyKeyStringValue)){
+                    showErrorPopup(getContentPane(),"Il tasto è già stato mappato");
+                }else{
+                     tmpBindedActionKeys[0] = prettyKeyStringValue;
+                     jLabel3.setText(prettyKeyStringValue);
+                }
+                isRebindingFirstKey = false;
+            }else{
+                if(tmpBindedActionKeys[0] != null && tmpBindedActionKeys[0].equalsIgnoreCase(prettyKeyStringValue)){
+                    showErrorPopup(getContentPane(),"Il tasto è già stato mappato");
+                }else{
+                     tmpBindedActionKeys[1] = prettyKeyStringValue;
+                     jLabel4.setText(prettyKeyStringValue);
+                }
+                isRebindingSecondKey = false;
+            }
         }
     }
     /**
@@ -178,8 +225,6 @@ public class KeyBindingView extends BaseView {
         });
     }
     
-    
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -192,10 +237,10 @@ public class KeyBindingView extends BaseView {
 
     @Override
     public void checkWetherActionOccured(NativeInputEvent e) {
-        System.err.println("GUI.KeyBindingView.checkWetherActionOccured()");
+        //No action should be taken in the keybinding 
     }
     
-    /* Check wether a critical key is pressed and returns false if it's not (Mouse event)*/
+    /* Checks wether a critical key is pressed and returns false if it's not (Mouse event)*/
     private boolean isCriticalKey(NativeInputEvent nie) {
         if(nie instanceof NativeMouseEvent){
             NativeMouseEvent nme = (NativeMouseEvent) nie;
@@ -212,4 +257,5 @@ public class KeyBindingView extends BaseView {
         }
         return false;
     }
+    
 }

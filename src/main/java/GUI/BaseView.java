@@ -5,9 +5,11 @@
  */
 package GUI;
 
+import java.awt.Container;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.NativeInputEvent;
@@ -23,7 +25,7 @@ import org.jnativehook.mouse.NativeMouseInputListener;
  */
 public abstract class BaseView extends JFrame implements NativeKeyListener, WindowListener , NativeMouseInputListener{
     protected static String bindedActionKeys[] = new String[2];
-    
+    protected static boolean isRebinding = false;
     public BaseView(){
         try {
             GlobalScreen.registerNativeHook();
@@ -50,37 +52,30 @@ public abstract class BaseView extends JFrame implements NativeKeyListener, Wind
 
     @Override
     public void windowOpened(WindowEvent e) {
-         
     }
 
     @Override
     public void windowClosing(WindowEvent e) {
-         
     }
 
     @Override
     public void windowClosed(WindowEvent e) {
-         
     }
 
     @Override
     public void windowIconified(WindowEvent e) {
-         
     }
 
     @Override
     public void windowDeiconified(WindowEvent e) {
-         
     }
 
     @Override
     public void windowActivated(WindowEvent e) {
-         
     }
 
     @Override
     public void windowDeactivated(WindowEvent e) {
-         
     }
     
      @Override
@@ -103,4 +98,10 @@ public abstract class BaseView extends JFrame implements NativeKeyListener, Wind
     }
     
     public abstract void checkWetherActionOccured(final NativeInputEvent e);
+    
+    public void showErrorPopup(Container container, String message){
+        JOptionPane.showMessageDialog(container,message,
+    "Errore",
+    JOptionPane.ERROR_MESSAGE);
+    }
 }
